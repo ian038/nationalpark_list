@@ -17,8 +17,8 @@ app.use(cookieParser());
 const authRouter = require('./routes/auth')
 const userRouter = require('./routes/user')
 
-app.use('/user', userRouter)
-app.use('/auth', authRouter)
+app.use('/api/user', userRouter)
+app.use('/api/auth', authRouter)
 
 const port = process.env.PORT || 5000
 
