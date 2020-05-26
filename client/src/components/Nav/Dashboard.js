@@ -1,38 +1,41 @@
 import React, { useState } from 'react';
+import { withRouter } from 'react-router-dom';
+import { isAuthenticated } from '../../auth'
+
 import clsx from 'clsx';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
+import { 
+  Tabs, 
+  Tab,
+  Drawer,
+  AppBar, 
+  Toolbar,
+  List,
+  Typography,
+  Divider,
+  IconButton,
+  ListItemText,
+  ListItemIcon,
+  ListItem,
+  makeStyles, 
+  useTheme
+} from '@material-ui/core'
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import Button from '@material-ui/core/Button';
 
-const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1
-  },
   menuButton: {
     marginRight: theme.spacing(2),
   },
   drawer: {
-    width: drawerWidth,
+    width: 240,
     flexShrink: 0,
   },
   drawerPaper: {
-    width: drawerWidth,
+    width: 240,
   },
   drawerHeader: {
     display: 'flex',
@@ -42,24 +45,34 @@ const useStyles = makeStyles((theme) => ({
     ...theme.mixins.toolbar,
     justifyContent: 'flex-end',
   },
+  toolbar: {
+    alignItems: 'flex-start',
+    paddingTop: theme.spacing(1),
+  },
   title: {
     flexGrow: 1,
-    color: '#fff'
+    color: '#fff',
+    paddingTop: theme.spacing(1),
+  },
+  tabs: {
+    flexGrow: 1,
+    alignSelf: 'flex-end'
   }
-}));
+}))
 
-export default function PersistentDrawerLeft() {
+export default function Dashboard() {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(0);
 
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
+  const handleDrawer = () => {
+    open ? setOpen(false) : setOpen(true)
+  }
 
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  }
 
   return (
     <div className={classes.root}>
@@ -68,21 +81,31 @@ export default function PersistentDrawerLeft() {
         className='appBar'
         style={{ background: '#1c92d2' }}
       >
-        <Toolbar>
+        <Toolbar className={classes.toolbar}>
           <IconButton
             color="inherit"
             aria-label="open drawer"
-            onClick={handleDrawerOpen}
+            onClick={handleDrawer}
             edge="start"
-            className={clsx(classes.menuButton, open && classes.hide)}
+            className={clsx(classes.menuButton, open)}
           >
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            Home
+            National Parks List
           </Typography>
-          <Button variant='contained' color="secondary" startIcon={<ExitToAppIcon />}>Sign Out</Button>
         </Toolbar>
+        <Tabs
+          variant="fullWidth"
+          value={value}
+          onChange={handleChange}
+          aria-label="nav tabs example"
+        >
+          <Tab label="Home" href="/"  />
+          <Tab label="Sign Up" href="/signup"  />
+          <Tab label="Sign In" href="/signin"  />
+          <Tab label="Sign Out" href="/signout"  />
+        </Tabs>
       </AppBar>
       <Drawer
         className={classes.drawer}
@@ -94,26 +117,24 @@ export default function PersistentDrawerLeft() {
         }}
       >
         <div className={classes.drawerHeader}>
-          <IconButton onClick={handleDrawerClose}>
+          <IconButton onClick={handleDrawer}>
             {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
           </IconButton>
         </div>
         <Divider />
         <List>
-          {['Home', 'Sign Out'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <AccountCircleIcon /> : <ExitToAppIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
+          <ListItem button>
+            <ListItemIcon><AccountCircleIcon /></ListItemIcon>
+            <ListItemText primary='Home' />
+          </ListItem>
+        </List>
+        <List>
+          <ListItem button>
+            <ListItemIcon><ExitToAppIcon /></ListItemIcon>
+            <ListItemText primary='Sign Out' />
+          </ListItem>
         </List>
       </Drawer>
-      <main
-        className={clsx(classes.content, {
-          [classes.contentShift]: open,
-        })}
-      >
-      </main>
     </div>
   );
 }
