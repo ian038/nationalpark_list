@@ -27,14 +27,18 @@ exports.signUp = (req, res) => {
 }
 
 exports.signIn = (req, res, next) => {
+    const { password } = req.body
     passport.authenticate('local', (error, user) => {
-        console.log(user)
-        if(error || !user) {
-            res.status(400).json({ error: 'User is not registered. Please sign up' })
+        if(error || !user[0]) {
+            return res.status(400).json({ error: 'User is not registered. Please sign up' })
         }
-        req.logIn(user, { session: false }, (error) => {
+        req.logIn(user, { session: false }, async (error) => {
             if(error) {
-                res.status(400).json({ error: 'User is not registered. Please sign up' })
+                return res.status(401).json(error)
+            }
+            const compare = await bcrypt.compare(password, user[0].password)
+            if(!compare) {
+                return res.status(400).json({ error: 'Username and password does not match' })
             }
             const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET)
             res.cookie('t', token, { expire: new Date() + 9999 })
