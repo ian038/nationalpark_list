@@ -1,6 +1,18 @@
 import { SERVER } from '../config'
 import axios from 'axios'
 
+export const signup = user => {
+    return axios({
+            method: 'post',
+            url:`${SERVER}/api/auth/signup`,
+            headers: {
+                Accept: "*/*",
+                "Content-Type": "application/json"
+            },
+            data: JSON.stringify(user)
+        })
+}
+
 export const signin = user => {
     return axios({
             method: 'post',

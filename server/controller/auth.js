@@ -17,13 +17,23 @@ exports.signUp = (req, res) => {
         "password": encryptedPassword,
         "salt": salt
     }
-    mysqlConnection.query(`INSERT INTO users SET ? `, user, (err, results) => {
+    mysqlConnection.query("SELECT * FROM dbnationalparklist.users", user, (err, results) => {
         if(err) {
-            res.json({ error: err.sqlMessage })
+            console.log(err)
+        } else if(results[0].username === user.username) {
+            return res.status(400).json({ error: 'Username already exists.' })
+        } else if(results[0].email === user.email) {
+            return res.status(400).json({ error: 'Email already exists' })
         } else {
-            res.json({ data: results })
+            mysqlConnection.query(`INSERT INTO users SET ? `, user, (err, results) => {
+                if(err) {
+                    res.json({ error: err.sqlMessage })
+                } else {
+                    res.json({ data: results })
+                }
+            }) 
         }
-    }) 
+    })
 }
 
 exports.signIn = (req, res, next) => {
