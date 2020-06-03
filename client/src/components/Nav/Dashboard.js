@@ -2,6 +2,7 @@ import React, { useState, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
 import { isAuthenticated, signout } from '../../auth'
 
+
 import clsx from 'clsx';
 import { 
   Button,
@@ -71,6 +72,7 @@ function Dashboard({ history }) {
         style={{ background: '#1c92d2' }}
       >
         <Toolbar className={classes.toolbar}>
+          {isAuthenticated() ? 
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -80,6 +82,8 @@ function Dashboard({ history }) {
           >
             <MenuIcon />
           </IconButton>
+          : ''
+          }
           <Typography variant="h6" className={classes.title}>
             National Parks List
           </Typography>
@@ -106,6 +110,7 @@ function Dashboard({ history }) {
           </nav>
         </Toolbar>
       </AppBar>
+      {isAuthenticated() ? 
       <Drawer
         className={classes.drawer}
         variant="persistent"
@@ -134,6 +139,8 @@ function Dashboard({ history }) {
           </ListItem>
         </List>
       </Drawer>
+      : ''
+      }
     </div>
   );
 }

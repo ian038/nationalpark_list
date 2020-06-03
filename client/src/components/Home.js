@@ -1,11 +1,11 @@
 import React from 'react'
 import Dashboard from './Nav/Dashboard'
+import States from './States/States'
 
 export default function Home() {
     return (
          <div>
-            <Dashboard />
-            <h1>Home</h1> 
+            <States />
          </div>
     )
 }

@@ -55,7 +55,6 @@ export default function SignIn() {
       e.preventDefault()
       setValues({ ...values, error: false, loading: true })
       signin({ username, password }).then(res => {
-          console.log(res)
           authenticate(res, () => {
             setValues({ ...values, redirectToReferer: true })
            })
