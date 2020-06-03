@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Redirect } from 'react-router-dom'
 import { 
     Avatar,
     Button,
@@ -7,13 +6,12 @@ import {
     Link, 
     Grid,
     Typography,
-    Container,
-    CircularProgress 
+    Container 
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
-import { isAuthenticated, signin, authenticate } from '../../auth'
+import { signup } from '../../auth'
 
 
 const useStyles = makeStyles((theme) => ({
@@ -36,16 +34,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn() {
+export default function SignUp() {
   const classes = useStyles();
   const [values, setValues] = useState({
       username: '',
+      email: '',
       password: '',
       error: '',
-      loading: false,
-      redirectToReferer: true
+      success: false
   })
-  const { username, password, error, loading, redirectToReferer } = values
+  const { username, email, password, error, success } = values
 
   const handleChange = name => e => {
       setValues({ ...values, error: false, [name]: e.target.value })
@@ -53,13 +51,11 @@ export default function SignIn() {
 
   const handleSubmit = e => {
       e.preventDefault()
-      setValues({ ...values, error: false, loading: true })
-      signin({ username, password }).then(res => {
-          authenticate(res, () => {
-            setValues({ ...values, redirectToReferer: true })
-           })
+      setValues({ ...values, error: false })
+      signup({ username, email, password }).then(res => {
+          setValues({ ...values, username: '', email: '', password: '', error: '', success: true })
       }).catch(error => {
-          setValues({ ...values, error: error.response.data.error, loading: false })
+          setValues({ ...values, error: error.response.data.error, success: false })
       })
   }
 
@@ -70,18 +66,13 @@ export default function SignIn() {
   )
 
   const showLoading = () => (
-      <CircularProgress style={{ display: loading ? '' : 'none'}} />
+    <Alert severity="success" style={{ display: success ? '' : 'none' }}>
+        Success! User created. Please <Link href="/signin" variant="body2" >Sign In</Link>
+    </Alert>
   )
 
-  const redirectUser = () => {
-      if(redirectToReferer) {
-          if(isAuthenticated()) {
-              return <Redirect to='/' />
-          }
-      }
-  }
 
-  const signInForm = () => (
+  const signUpForm = () => (
       <form className={classes.form} noValidate>
         <TextField
           variant="outlined"
@@ -93,6 +84,16 @@ export default function SignIn() {
           autoComplete="username"
           onChange={handleChange("username")}
           value={username}
+        />
+        <TextField
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
+          label="Email"
+          autoComplete="email"
+          onChange={handleChange("email")}
+          value={email}
         />
         <TextField
           variant="outlined"
@@ -113,12 +114,12 @@ export default function SignIn() {
           className={classes.submit}
           onClick={handleSubmit}
         >
-          Sign In
+          Sign Up
         </Button>
         <Grid container>
           <Grid item>
-            <Link href="/signup" variant="body2">
-              {"Don't have an account? Sign Up"}
+            <Link href="/signin" variant="body2">
+              {"Already have an account? Sign In"}
             </Link>
           </Grid>
         </Grid>
@@ -134,10 +135,9 @@ export default function SignIn() {
             <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-            Sign In
+            Sign Up
         </Typography>
-        {signInForm()}
-        {redirectUser()}
+        {signUpForm()}
     </div>
     </Container>
   );
