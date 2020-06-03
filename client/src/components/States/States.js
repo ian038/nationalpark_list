@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { NativeSelect, FormControl } from '@material-ui/core'
 import { usStates } from '../../config'
 
-import styles from './states.module.css'
-
 export default function States() {
     const [states, setState] = useState([])
 
@@ -16,7 +14,7 @@ export default function States() {
     }, [])
 
     return (
-        <FormControl className={styles.FormControl}>
+        <FormControl style={{ marginTop: '5%' }}>
             <NativeSelect defaultValue=''>
                 <option value=''></option>
                 {states.map((state, index) => <option value={state} key={index}>{state}</option>)}
