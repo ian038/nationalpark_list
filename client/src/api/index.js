@@ -1,12 +1,13 @@
 import axios from 'axios'
-import { KEY } from '../config'
 
-const url = 'developer.nps.gov/api/v1/parks'
+const url = 'https://developer.nps.gov/api/v1/parks'
 
-export const fetchUsStates = async (state) => {
+const API_KEY = process.env.REACT_APP_API_KEY
+
+export const fetchData = async (usState) => {
 
     try {
-        const { data } = await axios.get(`${url}?stateCode=${state}&api_key=${KEY}`)
+        const { data: { data } } = await axios.get(`${url}?stateCode=${usState}&api_key=${API_KEY}`)
         return data
     } catch(err) {
         console.log(err)
