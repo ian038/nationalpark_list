@@ -28,7 +28,7 @@ if(process.env.NODE_ENV === 'production') {
   // static folder
   app.use(express.static('client/build'))
   // handle SPA
-  app.get('*', (req, res) => res.sendFile(path.resolve(__dirname, '../client', 'build', 'index.html')))
+  app.get('*', (req, res) => res.sendFile(path.resolve(__dirname, '/../client', 'build', 'index.html')))
 }
 
 app.listen(port, () => {
