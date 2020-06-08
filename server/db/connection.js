@@ -2,15 +2,16 @@ const mysql = require('mysql')
 require('dotenv').config()
 
 // Database
-const mysqlConnection = mysql.createConnection({
+const db_config = {
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_DATABASE,
     multipleStatements: true
-  })
+  }
 
   function handleDisconnect() {
+    const mysqlConnection = mysql.createConnection(db_config)
     mysqlConnection.connect((err) => {
       if(!err) {
           console.log('DB opened')
