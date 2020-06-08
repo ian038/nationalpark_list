@@ -40,16 +40,20 @@ export default function States() {
         <CircularProgress style={{ display: loading ? '' : 'none', marginTop: '1%' }} size={30} />
       )
 
+      const statesForm = () => (
+        <FormControl className={classes.formControl}>
+        <InputLabel>State</InputLabel>
+        <NativeSelect defaultValue='' onChange={e => handleStateChange(e.target.value)}>
+            <option value=''></option>
+            {states.map((state, index) => <option value={state} key={index}>{state}</option>)}
+        </NativeSelect>
+        </FormControl>
+      )
+
 
     return (
         <Fragment>
-            <FormControl className={classes.formControl}>
-            <InputLabel>State</InputLabel>
-            <NativeSelect defaultValue='' onChange={e => handleStateChange(e.target.value)}>
-                <option value=''></option>
-                {states.map((state, index) => <option value={state} key={index}>{state}</option>)}
-            </NativeSelect>
-            </FormControl>
+            {statesForm()}
             {showLoading()}
             <Parks parks={parks} />
         </Fragment>
