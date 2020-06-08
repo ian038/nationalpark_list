@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
-import { isAuthenticated } from '../../auth'
+import { isAuthenticated, signout } from '../../auth'
+
 
 import clsx from 'clsx';
 import { 
-  Tabs, 
-  Tab,
+  Button,
   Drawer,
   AppBar, 
   Toolbar,
@@ -41,9 +41,6 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     padding: theme.spacing(0, 1),
-    // necessary for content to be below app bar
-    ...theme.mixins.toolbar,
-    justifyContent: 'flex-end',
   },
   toolbar: {
     alignItems: 'flex-start',
@@ -54,34 +51,28 @@ const useStyles = makeStyles((theme) => ({
     color: '#fff',
     paddingTop: theme.spacing(1),
   },
-  tabs: {
-    flexGrow: 1,
-    alignSelf: 'flex-end'
+  button: {
+    margin: theme.spacing(1, 1.5)
   }
 }))
 
-export default function Dashboard() {
+function Dashboard({ history }) {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(0);
 
   const handleDrawer = () => {
     open ? setOpen(false) : setOpen(true)
-  }
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
   }
 
   return (
     <div className={classes.root}>
       <AppBar
         position="fixed"
-        className='appBar'
         style={{ background: '#1c92d2' }}
       >
         <Toolbar className={classes.toolbar}>
+          {isAuthenticated() ? 
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -91,22 +82,35 @@ export default function Dashboard() {
           >
             <MenuIcon />
           </IconButton>
+          : ''
+          }
           <Typography variant="h6" className={classes.title}>
             National Parks List
           </Typography>
+          <nav>
+            {isAuthenticated() ? 
+            <Fragment>
+              <Button variant="contained" href="/search" className={classes.button}>
+                Search Parks
+              </Button>
+              <Button variant="contained" color="secondary" className={classes.button} onClick={() => signout(() => { history.push('/') })}>
+                Sign Out
+              </Button>
+            </Fragment>
+              :
+            <Fragment>
+              <Button variant="contained" href="/signup" className={classes.button}>
+                Sign Up
+              </Button>
+              <Button variant="contained" href="/signin" className={classes.button}>
+                Sign In
+              </Button>
+            </Fragment>
+            }
+          </nav>
         </Toolbar>
-        <Tabs
-          variant="fullWidth"
-          value={value}
-          onChange={handleChange}
-          aria-label="nav tabs example"
-        >
-          <Tab label="Home" href="/"  />
-          <Tab label="Sign Up" href="/signup"  />
-          <Tab label="Sign In" href="/signin"  />
-          <Tab label="Sign Out" href="/signout"  />
-        </Tabs>
       </AppBar>
+      {isAuthenticated() ? 
       <Drawer
         className={classes.drawer}
         variant="persistent"
@@ -135,6 +139,10 @@ export default function Dashboard() {
           </ListItem>
         </List>
       </Drawer>
+      : ''
+      }
     </div>
   );
 }
+
+export default withRouter(Dashboard)
