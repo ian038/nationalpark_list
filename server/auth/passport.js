@@ -5,7 +5,7 @@ module.exports = (passport, localStrategy, jwtStrategy, extractJwt) => {
         usernameField: 'username',
         passwordField: 'password'
     }, (username, password, done) => {
-        mysqlConnection.query(`SELECT * FROM heroku_d17f7b91da1e213.users WHERE username = ?`, username, async (err, results) => {
+        mysqlConnection.query(`SELECT * FROM ${process.env.DB_DATABASE}.users WHERE username = ?`, username, async (err, results) => {
             if(err) {
                 return done(null, false, { message: 'User does not exist' })
             } 

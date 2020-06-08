@@ -1,7 +1,7 @@
 const mysqlConnection = require('../db/connection')
 
 exports.getAll = (req, res) => {
-    mysqlConnection.query('SELECT * FROM heroku_d17f7b91da1e213.users', (err, results) => {
+    mysqlConnection.query(`SELECT * FROM ${process.env.DB_DATABASE}.users`, (err, results) => {
         if(err) {
             res.json(err)
         } else {
@@ -11,7 +11,7 @@ exports.getAll = (req, res) => {
 }
 
 exports.remove = (req, res) => {
-    mysqlConnection.query('DELETE FROM heroku_d17f7b91da1e213.users', (err, results) => {
+    mysqlConnection.query(`DELETE FROM ${process.env.DB_DATABASE}.users`, (err, results) => {
         if(err) {
             res.json(err)
         } else {

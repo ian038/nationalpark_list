@@ -17,7 +17,7 @@ exports.signUp = (req, res) => {
         "password": encryptedPassword,
         "salt": salt
     }
-    mysqlConnection.query("SELECT * FROM heroku_d17f7b91da1e213.users", user, (err, results) => {
+    mysqlConnection.query(`SELECT * FROM ${process.env.DB_DATABASE}.users`, user, (err, results) => {
         if(err) {
             console.log(err)
         } else if(results[0].username === user.username) {
