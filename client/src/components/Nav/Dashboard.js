@@ -90,8 +90,8 @@ function Dashboard({ history }) {
           <nav>
             {isAuthenticated() ? 
             <Fragment>
-              <Button variant="contained" href="/" className={classes.button}>
-                Home
+              <Button variant="contained" href="/search" className={classes.button}>
+                Search Parks
               </Button>
               <Button variant="contained" color="secondary" className={classes.button} onClick={() => signout(() => { history.push('/') })}>
                 Sign Out
