@@ -2,7 +2,7 @@ const mysql = require('mysql')
 require('dotenv').config()
 
 // Database
-const mysqlConnection = mysql.createConnection({
+const mysqlConnection = mysql.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
@@ -15,19 +15,17 @@ const mysqlConnection = mysql.createConnection({
         console.log('DB opened')
     } else {
         console.log('Error' + err)
-        setTimeout(handleDisconnect, 2000)
+        // setTimeout(handleDisconnect, 2000)
     }
   })
 
-  mysqlConnection.on('Error', (err) => {
-    console.log('db error', err)
-    if(err.code === 'PROTOCOL_CONNECTION_LOST') {
-      handleDisconnect()
-    } else {
-      throw err
-    }
-  })
-
-  handleDisconnect()
+  // mysqlConnection.on('Error', (err) => {
+  //   console.log('db error', err)
+  //   if(err.code === 'PROTOCOL_CONNECTION_LOST') {
+  //     handleDisconnect()
+  //   } else {
+  //     throw err
+  //   }
+  // })
 
 module.exports = mysqlConnection
