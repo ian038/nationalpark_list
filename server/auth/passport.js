@@ -1,4 +1,5 @@
 const mysqlConnection = require('../db/connection')
+require('dotenv').config()
 
 module.exports = (passport, localStrategy, jwtStrategy, extractJwt) => {
     passport.use('local', new localStrategy({

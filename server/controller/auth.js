@@ -7,6 +7,8 @@ const extractJwt = require('passport-jwt').ExtractJwt
 const jwt = require('jsonwebtoken')
 require('../auth/passport')(passport, localStrategy, jwtStrategy, extractJwt)
 
+require('dotenv').config()
+
 exports.signUp = (req, res) => {
     const { username, email, password } = req.body
     const salt = bcrypt.genSaltSync(10)
