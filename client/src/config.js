@@ -1,5 +1,3 @@
-export const SERVER = process.env.REACT_APP_SERVER_URL
-
 export const usStates = {
         "AL": "Alabama",
         "AK": "Alaska",
