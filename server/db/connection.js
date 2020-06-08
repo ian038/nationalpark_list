@@ -10,7 +10,7 @@ const mysqlConnection = mysql.createConnection({
     multipleStatements: true
   })
 
-  const connection
+  let connection
 
   function handleDisconnect() {
     // recreate connection
