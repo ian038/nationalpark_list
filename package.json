@@ -6,7 +6,6 @@
   "scripts": {
     "start": "node server/server.js",
     "server": "nodemon server/server.js",
-    "build": "",
     "heroku-postbuild": "cd client && npm install && npm run build"
   },
   "author": "Ian Phua",
