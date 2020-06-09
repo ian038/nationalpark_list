@@ -7,8 +7,6 @@ const extractJwt = require('passport-jwt').ExtractJwt
 const jwt = require('jsonwebtoken')
 require('../auth/passport')(passport, localStrategy, jwtStrategy, extractJwt)
 
-require('dotenv').config()
-
 exports.signUp = (req, res) => {
     const { username, email, password } = req.body
     const salt = bcrypt.genSaltSync(10)
@@ -19,7 +17,7 @@ exports.signUp = (req, res) => {
         "password": encryptedPassword,
         "salt": salt
     }
-    mysqlConnection.query(`SELECT * FROM ${process.env.DB_DATABASE}.users`, user, (err, results) => {
+    mysqlConnection.query(`SELECT * FROM ${process.env.DB_DATABASE}`, user, (err, results) => {
         if(err) {
             console.log(err)
         } else if(results[0].username === user.username) {
