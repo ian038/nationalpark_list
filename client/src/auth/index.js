@@ -1,4 +1,3 @@
-import { SERVER } from '../config'
 import axios from 'axios'
 
 export const signup = user => {
