@@ -14,7 +14,7 @@ const mysqlConnection = mysql.createPool({
 
   function handleDisconnect() {
     // recreate connection
-    connection = mysql.createPool({
+    connection = mysql.createConnection({
       host: process.env.DB_HOST,
       user: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
