@@ -1,7 +1,6 @@
 import React, { useState, useEffect, Fragment } from 'react'
 import { NativeSelect, FormControl, InputLabel, makeStyles, CircularProgress } from '@material-ui/core'
 import { usStates } from '../../config'
-import { isAuthenticated } from '../../auth'
 import { fetchData } from '../../api'
 import Parks from '../Parks/Parks'
 
