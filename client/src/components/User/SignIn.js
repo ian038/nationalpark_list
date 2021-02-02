@@ -13,8 +13,8 @@ import {
 import { Alert } from '@material-ui/lab'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
-import { isAuthenticated, signin, authenticate } from '../../auth'
-
+import { isAuthenticated, signin, authenticate, validateRecaptcha } from '../../auth'
+import ReCAPTCHA from "react-google-recaptcha" 
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -30,6 +30,7 @@ const useStyles = makeStyles((theme) => ({
   form: {
     width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(4)
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
@@ -43,24 +44,38 @@ export default function SignIn() {
       password: '',
       error: '',
       loading: false,
-      redirectToReferer: true
+      redirectToReferer: false,
+      recaptcha: false
   })
-  const { username, password, error, loading, redirectToReferer } = values
+  const { username, password, error, loading, redirectToReferer, recaptcha } = values
 
   const handleChange = name => e => {
       setValues({ ...values, error: false, [name]: e.target.value })
   }
 
+  const handleCaptcha = value => {
+    validateRecaptcha(value).then(res => {
+      setValues({ ...values, recaptcha: res.data.success })
+    }).catch(error => {
+      console.log(error.response)
+      // setValues({ ...values, recaptcha: false, error: error })
+    })
+  }
+
   const handleSubmit = e => {
       e.preventDefault()
       setValues({ ...values, error: false, loading: true })
-      signin({ username, password }).then(res => {
+      if(recaptcha) {
+        signin({ username, password }).then(res => {
           authenticate(res, () => {
             setValues({ ...values, redirectToReferer: true })
            })
-      }).catch(error => {
-          setValues({ ...values, error: error.response.data.error, loading: false })
-      })
+        }).catch(error => {
+            setValues({ ...values, error: error.response.data.error, loading: false })
+        })
+      } else {
+        setValues({ ...values, error: 'Please validate recaptcha' })
+      }
   }
 
   const showError = () => (
@@ -138,6 +153,7 @@ export default function SignIn() {
         </Typography>
         {signInForm()}
         {redirectUser()}
+        <ReCAPTCHA sitekey="6LdnsUUaAAAAAIKnh5KN2YjooZQnU-bh2G4kUO_s" onChange={handleCaptcha} />
     </div>
     </Container>
   );

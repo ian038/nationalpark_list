@@ -52,3 +52,15 @@ export const isAuthenticated = () => {
         return false
     }
 }
+
+export const validateRecaptcha = token => {
+    return axios({
+        method: 'post',
+        url:`/api/auth/validateRecaptcha`,
+        headers: {
+            Accept: "*/*",
+            "Content-Type": "application/json"
+        },
+        data: JSON.stringify({ token })
+    })
+}
