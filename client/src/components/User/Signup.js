@@ -11,7 +11,8 @@ import {
 import { Alert } from '@material-ui/lab'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
-import { signup } from '../../auth'
+import { signup, validateRecaptcha } from '../../auth'
+import ReCAPTCHA from "react-google-recaptcha" 
 
 
 const useStyles = makeStyles((theme) => ({
@@ -28,6 +29,7 @@ const useStyles = makeStyles((theme) => ({
   form: {
     width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(4)
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
@@ -41,22 +43,36 @@ export default function SignUp() {
       email: '',
       password: '',
       error: '',
-      success: false
+      success: false,
+      recaptcha: false
   })
-  const { username, email, password, error, success } = values
+  const { username, email, password, error, success, recaptcha } = values
 
   const handleChange = name => e => {
       setValues({ ...values, error: false, [name]: e.target.value })
   }
 
+  const handleCaptcha = value => {
+    validateRecaptcha(value).then(res => {
+      setValues({ ...values, recaptcha: res.data.success })
+    }).catch(error => {
+      setValues({ ...values, recaptcha: false, error: error })
+    })
+  }
+
   const handleSubmit = e => {
       e.preventDefault()
       setValues({ ...values, error: false })
-      signup({ username, email, password }).then(res => {
-          setValues({ ...values, username: '', email: '', password: '', error: '', success: true })
-      }).catch(error => {
-          setValues({ ...values, error: error.response.data.error, success: false })
-      })
+      console.log(recaptcha)
+      if(recaptcha) {
+        signup({ username, email, password }).then(res => {
+            setValues({ ...values, username: '', email: '', password: '', error: '', success: true })
+        }).catch(error => {
+            setValues({ ...values, error: error.response.data.error, success: false })
+        })
+      } else {
+        setValues({ ...values, error: 'Please validate recaptcha' })
+      }
   }
 
   const showError = () => (
@@ -70,7 +86,6 @@ export default function SignUp() {
         Success! User created. Please <Link href="/signin" variant="body2" >Sign In</Link>
     </Alert>
   )
-
 
   const signUpForm = () => (
       <form className={classes.form} noValidate>
@@ -138,6 +153,7 @@ export default function SignUp() {
             Sign Up
         </Typography>
         {signUpForm()}
+        <ReCAPTCHA sitekey="6LdnsUUaAAAAAIKnh5KN2YjooZQnU-bh2G4kUO_s" onChange={handleCaptcha} />
     </div>
     </Container>
   );
