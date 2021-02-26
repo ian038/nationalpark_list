@@ -78,13 +78,13 @@ exports.isAuth = (req, res, next) => {
 exports.validateRecaptcha = async (req, res, next) => {
     const { token } = req.body
     const secret = process.env.CAPTCHA_SECRET
+    if(token === null) {
+        return res.status(400).json({ error: 'YOU ARE NOT HUMAN' })
+    }
     try {
         const isHuman = await axios.post(`https://www.google.com/recaptcha/api/siteverify?secret=${secret}&response=${token}`)
         return res.json({ success: isHuman.data.success })
     } catch(error) {
         throw new Error(`Error in Google verify API. ${error}`)
-    }
-    if(token === null) {
-        return res.status(400).json({ error: 'YOU ARE NOT HUMAN' })
     }
 }
